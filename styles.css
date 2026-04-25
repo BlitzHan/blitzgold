@@ -41,11 +41,11 @@ input {
 .app-shell {
   width: min(1180px, calc(100% - 32px));
   margin: 0 auto;
-  padding: 24px 0 40px;
+  padding: 18px 0 40px;
 }
 
 .market-stage {
-  min-height: calc(100vh - 120px);
+  min-height: calc(100vh - 92px);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -56,7 +56,7 @@ input {
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  padding: 6px 0 34px;
+  padding: 4px 0 18px;
 }
 
 .brand {
@@ -154,9 +154,9 @@ p {
 
 h1 {
   max-width: 720px;
-  margin-top: 12px;
-  font-size: clamp(2.45rem, 6vw, 5.35rem);
-  line-height: 0.98;
+  margin-top: 24px;
+  font-size: clamp(2rem, 4.2vw, 4.1rem);
+  line-height: 1.02;
   letter-spacing: 0;
 }
 
@@ -175,8 +175,8 @@ h2 {
 }
 
 .main-quote {
-  margin-top: 38px;
-  padding: 24px;
+  margin-top: 14px;
+  padding: clamp(22px, 3.4vw, 34px);
   border: 1px solid rgba(244, 197, 66, 0.28);
   border-radius: 8px;
   background: linear-gradient(135deg, rgba(244, 197, 66, 0.14), rgba(29, 37, 42, 0.84));
@@ -204,9 +204,10 @@ h2 {
 .main-quote strong {
   display: block;
   margin-top: 8px;
-  font-size: clamp(2.3rem, 7vw, 4.8rem);
+  font-size: clamp(3.6rem, 8vw, 7rem);
   line-height: 1;
   color: var(--gold);
+  overflow-wrap: anywhere;
 }
 
 .main-quote small,
@@ -299,7 +300,53 @@ output {
 
 input[type="range"] {
   width: 100%;
+  height: 26px;
+  margin: 0;
+  appearance: none;
+  -webkit-appearance: none;
+  background: transparent;
   accent-color: var(--gold);
+}
+
+input[type="range"]::-webkit-slider-runnable-track {
+  height: 8px;
+  border: 1px solid rgba(245, 241, 232, 0.36);
+  border-radius: 999px;
+  background:
+    linear-gradient(var(--gold), var(--gold)) 0 / var(--fill, 50%) 100% no-repeat,
+    rgba(245, 241, 232, 0.16);
+}
+
+input[type="range"]::-moz-range-track {
+  height: 8px;
+  border: 1px solid rgba(245, 241, 232, 0.36);
+  border-radius: 999px;
+  background:
+    linear-gradient(var(--gold), var(--gold)) 0 / var(--fill, 50%) 100% no-repeat,
+    rgba(245, 241, 232, 0.16);
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  width: 22px;
+  height: 22px;
+  margin-top: -8px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--gold);
+  box-shadow: 0 0 0 5px rgba(244, 197, 66, 0.16);
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+input[type="range"]::-moz-range-thumb {
+  width: 22px;
+  height: 22px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--gold);
+  box-shadow: 0 0 0 5px rgba(244, 197, 66, 0.16);
+  cursor: pointer;
 }
 
 .scenario-result {

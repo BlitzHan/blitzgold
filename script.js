@@ -61,10 +61,10 @@ function parseMarketNumber(value) {
   if (typeof value === "number") return value;
   if (!value) return 0;
 
-  const normalized = String(value)
-    .replace(/[^\d,.-]/g, "")
-    .replace(/\./g, "")
-    .replace(",", ".");
+  const cleaned = String(value).trim().replace(/[^\d,.-]/g, "");
+  const normalized = cleaned.includes(",")
+    ? cleaned.replace(/\./g, "").replace(",", ".")
+    : cleaned;
 
   return Number.parseFloat(normalized) || 0;
 }
@@ -145,6 +145,9 @@ function hydrateMarket(rawData, ounceData = null) {
 }
 
 function updateScenario() {
+  updateRangeFill(elements.ounceMove);
+  updateRangeFill(elements.usdMove);
+
   if (!state.gram) return;
 
   const ounceMove = parseMarketNumber(elements.ounceMove.value);
@@ -163,6 +166,14 @@ function updateScenario() {
   elements.ounceOneImpact.textContent = `+${moneyTRY.format(state.gram * 0.01)}`;
   elements.usdOneImpact.textContent = `+${moneyTRY.format(state.gram * 0.01)}`;
   elements.combinedOneImpact.textContent = `+${moneyTRY.format(state.gram * 0.0201)}`;
+}
+
+function updateRangeFill(input) {
+  const min = Number(input.min);
+  const max = Number(input.max);
+  const value = Number(input.value);
+  const fill = ((value - min) / (max - min)) * 100;
+  input.style.setProperty("--fill", `${fill}%`);
 }
 
 async function fetchMarket() {
@@ -207,5 +218,7 @@ document.querySelectorAll(".quick-grid button").forEach((button) => {
 
 elements.ounceMove.value = 0;
 elements.usdMove.value = 0;
+updateRangeFill(elements.ounceMove);
+updateRangeFill(elements.usdMove);
 fetchMarket();
 setInterval(fetchMarket, 120000);
