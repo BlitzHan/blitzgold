@@ -82,9 +82,10 @@
                 <div class="scenario-market-card">
                   <span>Canlı ons</span>
                   <strong id="liveOunceValue">--</strong>
-                  <span>Senaryo ons</span>
-                  <strong id="scenarioOunceValue">--</strong>
+                  <label for="targetOunceInput">Senaryo ons</label>
+                  <input id="targetOunceInput" class="market-input" type="number" step="1" inputmode="decimal" autocomplete="off" />
                 </div>
+                <div class="preset-grid" id="ouncePresets" aria-label="Hazır ons seçenekleri"></div>
               </label>
               <label class="range-control">
                 <span>
@@ -95,9 +96,10 @@
                 <div class="scenario-market-card">
                   <span>Canlı dolar</span>
                   <strong id="liveUsdValue">--</strong>
-                  <span>Senaryo dolar</span>
-                  <strong id="scenarioUsdValue">--</strong>
+                  <label for="targetUsdInput">Senaryo dolar</label>
+                  <input id="targetUsdInput" class="market-input" type="number" step="0.01" inputmode="decimal" autocomplete="off" />
                 </div>
+                <div class="preset-grid" id="usdPresets" aria-label="Hazır dolar seçenekleri"></div>
               </label>
             </div>
 

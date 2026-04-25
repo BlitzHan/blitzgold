@@ -38,6 +38,10 @@ input {
   font: inherit;
 }
 
+button {
+  cursor: pointer;
+}
+
 .app-shell {
   width: min(1180px, calc(100% - 32px));
   margin: 0 auto;
@@ -366,7 +370,8 @@ input[type="range"]::-moz-range-thumb {
   background: rgba(15, 20, 22, 0.74);
 }
 
-.scenario-market-card span {
+.scenario-market-card span,
+.scenario-market-card label {
   color: var(--muted);
   font-size: 0.78rem;
 }
@@ -375,6 +380,46 @@ input[type="range"]::-moz-range-thumb {
   font-size: 1.05rem;
   line-height: 1.15;
   overflow-wrap: anywhere;
+}
+
+.market-input {
+  width: 100%;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  border-bottom: 1px solid rgba(244, 197, 66, 0.45);
+  color: var(--text);
+  background: transparent;
+  font-size: 1.05rem;
+  font-weight: 800;
+  line-height: 1.15;
+  outline: none;
+}
+
+.market-input:focus {
+  border-color: var(--gold);
+}
+
+.preset-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.preset-grid button {
+  min-height: 34px;
+  padding: 6px 4px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  color: var(--text);
+  background: var(--surface-2);
+  font-size: 0.82rem;
+  font-weight: 750;
+}
+
+.preset-grid button:hover {
+  border-color: rgba(244, 197, 66, 0.65);
+  color: var(--gold);
 }
 
 .scenario-result {

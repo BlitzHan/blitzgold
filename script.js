@@ -13,6 +13,8 @@ const state = {
   gram: 0,
   ounce: 0,
   usd: 0,
+  targetOunce: 0,
+  targetUsd: 0,
   premiumFactor: 1,
   lastUpdate: "",
 };
@@ -35,9 +37,11 @@ const elements = {
   scenarioPrice: $("#scenarioPrice"),
   scenarioDelta: $("#scenarioDelta"),
   liveOunceValue: $("#liveOunceValue"),
-  scenarioOunceValue: $("#scenarioOunceValue"),
+  targetOunceInput: $("#targetOunceInput"),
+  ouncePresets: $("#ouncePresets"),
   liveUsdValue: $("#liveUsdValue"),
-  scenarioUsdValue: $("#scenarioUsdValue"),
+  targetUsdInput: $("#targetUsdInput"),
+  usdPresets: $("#usdPresets"),
   ounceOneImpact: $("#ounceOneImpact"),
   usdOneImpact: $("#usdOneImpact"),
   combinedOneImpact: $("#combinedOneImpact"),
@@ -123,6 +127,8 @@ function hydrateMarket(rawData, ounceData = null) {
   state.gram = gram;
   state.ounce = ounce;
   state.usd = usd;
+  state.targetOunce = ounce;
+  state.targetUsd = usd;
   state.premiumFactor = gram / ((ounce / TROY_OUNCE_GRAMS) * usd);
   state.lastUpdate =
     ounceData?.updatedAtReadable ||
@@ -145,29 +151,29 @@ function hydrateMarket(rawData, ounceData = null) {
   }
   setChange(elements.usdChange, getChange(usdAsset));
 
+  renderPresets();
   updateScenario();
 }
 
 function updateScenario() {
-  updateRangeFill(elements.ounceMove);
-  updateRangeFill(elements.usdMove);
-
   if (!state.gram) return;
 
-  const ounceMove = parseMarketNumber(elements.ounceMove.value);
-  const usdMove = parseMarketNumber(elements.usdMove.value);
-  const scenario = state.gram * (1 + ounceMove / 100) * (1 + usdMove / 100);
-  const scenarioOunce = state.ounce * (1 + ounceMove / 100);
-  const scenarioUsd = state.usd * (1 + usdMove / 100);
+  const scenarioOunce = state.targetOunce || state.ounce;
+  const scenarioUsd = state.targetUsd || state.usd;
+  const ounceMove = (scenarioOunce / state.ounce - 1) * 100;
+  const usdMove = (scenarioUsd / state.usd - 1) * 100;
+  const scenario = state.gram * (scenarioOunce / state.ounce) * (scenarioUsd / state.usd);
   const delta = scenario - state.gram;
   const deltaPercent = (scenario / state.gram - 1) * 100;
 
+  syncRange(elements.ounceMove, ounceMove);
+  syncRange(elements.usdMove, usdMove);
   elements.ounceMoveLabel.textContent = `${numberTR.format(ounceMove)}%`;
   elements.usdMoveLabel.textContent = `${numberTR.format(usdMove)}%`;
   elements.liveOunceValue.textContent = moneyUSD.format(state.ounce);
-  elements.scenarioOunceValue.textContent = moneyUSD.format(scenarioOunce);
   elements.liveUsdValue.textContent = moneyTRY.format(state.usd);
-  elements.scenarioUsdValue.textContent = moneyTRY.format(scenarioUsd);
+  elements.targetOunceInput.value = formatInputNumber(scenarioOunce, 2);
+  elements.targetUsdInput.value = formatInputNumber(scenarioUsd, 2);
   elements.scenarioPrice.textContent = moneyTRY.format(scenario);
   elements.scenarioDelta.textContent = `${delta >= 0 ? "+" : ""}${moneyTRY.format(delta)} (${formatChange(deltaPercent)})`;
   elements.scenarioDelta.classList.toggle("positive", delta > 0);
@@ -184,6 +190,48 @@ function updateRangeFill(input) {
   const value = Number(input.value);
   const fill = ((value - min) / (max - min)) * 100;
   input.style.setProperty("--fill", `${fill}%`);
+}
+
+function syncRange(input, value) {
+  const min = Number(input.min);
+  const max = Number(input.max);
+  input.value = Math.min(max, Math.max(min, value));
+  updateRangeFill(input);
+}
+
+function formatInputNumber(value, fractionDigits) {
+  return Number(value).toFixed(fractionDigits).replace(/\.?0+$/, "");
+}
+
+function renderPresets() {
+  const usdBase = Math.round(state.usd);
+  const ounceBase = Math.round(state.ounce / 50) * 50;
+
+  renderPresetButtons(elements.usdPresets, [usdBase - 4, usdBase - 2, usdBase, usdBase + 2, usdBase + 4], "usd");
+  renderPresetButtons(
+    elements.ouncePresets,
+    [ounceBase - 100, ounceBase - 50, ounceBase, ounceBase + 50, ounceBase + 100],
+    "ounce",
+  );
+}
+
+function renderPresetButtons(container, values, type) {
+  container.replaceChildren(
+    ...values.map((value) => {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.textContent = type === "usd" ? numberTR.format(value) : `$${numberTR.format(value)}`;
+      button.addEventListener("click", () => {
+        if (type === "usd") {
+          state.targetUsd = value;
+        } else {
+          state.targetOunce = value;
+        }
+        updateScenario();
+      });
+      return button;
+    }),
+  );
 }
 
 async function fetchMarket() {
@@ -214,8 +262,22 @@ async function fetchMarket() {
   }
 }
 
-elements.ounceMove.addEventListener("input", updateScenario);
-elements.usdMove.addEventListener("input", updateScenario);
+elements.ounceMove.addEventListener("input", () => {
+  state.targetOunce = state.ounce * (1 + parseMarketNumber(elements.ounceMove.value) / 100);
+  updateScenario();
+});
+elements.usdMove.addEventListener("input", () => {
+  state.targetUsd = state.usd * (1 + parseMarketNumber(elements.usdMove.value) / 100);
+  updateScenario();
+});
+elements.targetOunceInput.addEventListener("input", () => {
+  state.targetOunce = parseMarketNumber(elements.targetOunceInput.value) || state.ounce;
+  updateScenario();
+});
+elements.targetUsdInput.addEventListener("input", () => {
+  state.targetUsd = parseMarketNumber(elements.targetUsdInput.value) || state.usd;
+  updateScenario();
+});
 elements.refreshButton.addEventListener("click", fetchMarket);
 
 elements.ounceMove.value = 0;
