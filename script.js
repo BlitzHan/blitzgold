@@ -1,5 +1,9 @@
 const MARKET_API_URL = "https://finans.truncgil.com/v4/today.json";
-const GOLD_API_URL = "https://api.gold-api.com/price/XAU";
+const YAHOO_CHART_API = "https://query1.finance.yahoo.com/v8/finance/chart/";
+const YAHOO_SYMBOLS = {
+  usdTry: "USDTRY=X",
+  goldOunce: "GC=F",
+};
 const TROY_OUNCE_GRAMS = 31.1034768;
 
 const fallbackMarket = {
@@ -109,16 +113,15 @@ function setChange(element, change) {
   element.classList.toggle("negative", change < 0);
 }
 
-function hydrateMarket(rawData, ounceData = null) {
+function hydrateMarket(rawData, yahooData = null) {
   const gramAsset = pick(rawData, ["GRA", "Gram Altın", "gram-altin", "gramAltin", "ALTIN"]);
-  const ounceAsset = pick(rawData, ["ONS", "Ons Altın", "ons", "ons-altin", "XAU"]);
   const usdAsset = pick(rawData, ["USD", "Amerikan Doları", "dolar", "US Dollar"]);
 
   const gram = getBuying(gramAsset);
-  const usd = getBuying(usdAsset);
-  const apiOunce = parseMarketNumber(ounceData?.price);
-  const marketOunce = getBuying(ounceAsset);
-  const ounce = apiOunce || marketOunce || (gram && usd ? (gram / usd) * TROY_OUNCE_GRAMS : 0);
+  const yahooUsd = parseMarketNumber(yahooData?.usdTry?.price);
+  const yahooOunce = parseMarketNumber(yahooData?.goldOunce?.price);
+  const usd = yahooUsd || getBuying(usdAsset);
+  const ounce = yahooOunce || (gram && usd ? (gram / usd) * TROY_OUNCE_GRAMS : 0);
 
   if (!gram || !ounce || !usd) {
     throw new Error("Piyasa verisinde gram altın, ons veya USD/TRY bulunamadı.");
@@ -131,7 +134,7 @@ function hydrateMarket(rawData, ounceData = null) {
   state.targetUsd = usd;
   state.premiumFactor = gram / ((ounce / TROY_OUNCE_GRAMS) * usd);
   state.lastUpdate =
-    ounceData?.updatedAtReadable ||
+    yahooData?.updatedAt ||
     rawData.Update_Date ||
     rawData.update_date ||
     new Date().toLocaleString("tr-TR");
@@ -143,16 +146,24 @@ function hydrateMarket(rawData, ounceData = null) {
   elements.updatedAt.textContent = state.lastUpdate;
 
   setChange(elements.gramChange, getChange(gramAsset));
-  if (apiOunce) {
-    elements.ounceChange.textContent = "Canlı XAU/USD";
-    elements.ounceChange.classList.remove("positive", "negative");
-  } else {
-    setChange(elements.ounceChange, getChange(ounceAsset));
-  }
-  setChange(elements.usdChange, getChange(usdAsset));
+  setYahooChange(elements.ounceChange, yahooData?.goldOunce);
+  setYahooChange(elements.usdChange, yahooData?.usdTry);
 
   renderPresets();
   updateScenario();
+}
+
+function setYahooChange(element, quote) {
+  const change = parseMarketNumber(quote?.changePercent);
+  if (!quote || Number.isNaN(change)) {
+    element.textContent = "Yahoo verisi bekleniyor";
+    element.classList.remove("positive", "negative");
+    return;
+  }
+
+  element.textContent = `Yahoo ${formatChange(change)}`;
+  element.classList.toggle("positive", change > 0);
+  element.classList.toggle("negative", change < 0);
 }
 
 function updateScenario() {
@@ -238,9 +249,9 @@ async function fetchMarket() {
   setStatus("Canlı veri alınıyor");
 
   try {
-    const [marketResult, ounceResult] = await Promise.allSettled([
+    const [marketResult, yahooResult] = await Promise.allSettled([
       fetch(MARKET_API_URL, { cache: "no-store" }),
-      fetch(GOLD_API_URL, { cache: "no-store" }),
+      fetchYahooQuotes(),
     ]);
 
     if (marketResult.status !== "fulfilled" || !marketResult.value.ok) {
@@ -248,18 +259,60 @@ async function fetchMarket() {
     }
 
     const data = await marketResult.value.json();
-    const ounceData =
-      ounceResult.status === "fulfilled" && ounceResult.value.ok
-        ? await ounceResult.value.json()
-        : null;
+    const yahooData = yahooResult.status === "fulfilled" ? yahooResult.value : null;
 
-    hydrateMarket(data, ounceData);
-    setStatus("Canlı veri aktif", "live");
+    hydrateMarket(data, yahooData);
+    setStatus(yahooData ? "Yahoo verisi aktif" : "Yahoo alınamadı, yedek veri", yahooData ? "live" : "error");
   } catch (error) {
     hydrateMarket(fallbackMarket);
     setStatus("Canlı veri alınamadı, örnek veri", "error");
     console.warn(error);
   }
+}
+
+async function fetchYahooQuotes() {
+  const [usdTry, goldOunce] = await Promise.all([
+    fetchYahooChart(YAHOO_SYMBOLS.usdTry),
+    fetchYahooChart(YAHOO_SYMBOLS.goldOunce),
+  ]);
+
+  return {
+    usdTry,
+    goldOunce,
+    updatedAt: new Date(Math.max(usdTry.timestamp, goldOunce.timestamp) * 1000).toLocaleString("tr-TR"),
+  };
+}
+
+async function fetchYahooChart(symbol) {
+  const response = await fetch(`${YAHOO_CHART_API}${encodeURIComponent(symbol)}?range=1d&interval=1m`, {
+    cache: "no-store",
+  });
+
+  if (!response.ok) {
+    throw new Error(`Yahoo ${symbol} yanıtı başarısız: ${response.status}`);
+  }
+
+  const payload = await response.json();
+  const result = payload.chart?.result?.[0];
+  const meta = result?.meta;
+  const closes = result?.indicators?.quote?.[0]?.close || [];
+  const timestamps = result?.timestamp || [];
+  const lastIndex = closes.map(Number).findLastIndex((value) => Number.isFinite(value) && value > 0);
+  const price = Number.isFinite(Number(meta?.regularMarketPrice))
+    ? Number(meta.regularMarketPrice)
+    : Number(closes[lastIndex]);
+  const previousClose = Number(meta?.chartPreviousClose || meta?.previousClose || 0);
+  const changePercent = previousClose ? ((price - previousClose) / previousClose) * 100 : 0;
+
+  if (!Number.isFinite(price) || price <= 0) {
+    throw new Error(`Yahoo ${symbol} fiyatı okunamadı.`);
+  }
+
+  return {
+    price,
+    changePercent,
+    timestamp: Number(meta?.regularMarketTime || timestamps[lastIndex] || Date.now() / 1000),
+  };
 }
 
 elements.ounceMove.addEventListener("input", () => {
