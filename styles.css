@@ -402,7 +402,7 @@ input[type="range"]::-moz-range-thumb {
 
 .preset-grid {
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-template-columns: repeat(7, minmax(0, 1fr));
   gap: 6px;
 }
 
@@ -413,7 +413,7 @@ input[type="range"]::-moz-range-thumb {
   border-radius: 8px;
   color: var(--text);
   background: var(--surface-2);
-  font-size: 0.82rem;
+  font-size: 0.76rem;
   font-weight: 750;
 }
 

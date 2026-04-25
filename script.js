@@ -218,10 +218,14 @@ function renderPresets() {
   const usdBase = Math.round(state.usd);
   const ounceBase = Math.round(state.ounce / 50) * 50;
 
-  renderPresetButtons(elements.usdPresets, [usdBase - 4, usdBase - 2, usdBase, usdBase + 2, usdBase + 4], "usd");
+  renderPresetButtons(
+    elements.usdPresets,
+    [usdBase - 6, usdBase - 4, usdBase - 2, usdBase, usdBase + 2, usdBase + 4, usdBase + 6],
+    "usd",
+  );
   renderPresetButtons(
     elements.ouncePresets,
-    [ounceBase - 100, ounceBase - 50, ounceBase, ounceBase + 50, ounceBase + 100],
+    [ounceBase - 150, ounceBase - 100, ounceBase - 50, ounceBase, ounceBase + 50, ounceBase + 100, ounceBase + 150],
     "ounce",
   );
 }
