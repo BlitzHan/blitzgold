@@ -225,7 +225,7 @@ function renderPresets() {
   );
   renderPresetButtons(
     elements.ouncePresets,
-    [ounceBase - 150, ounceBase - 100, ounceBase - 50, ounceBase, ounceBase + 50, ounceBase + 100, ounceBase + 150],
+    [ounceBase - 100, ounceBase - 75, ounceBase - 50, ounceBase, ounceBase + 50, ounceBase + 75, ounceBase + 100],
     "ounce",
   );
 }
