@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="BlitzGold canlı gram altın, ons altın ve dolar kuru etki takip paneli."
+    />
+    <title>BlitzGold | Canlı Gram Altın Takibi</title>
+    <link rel="preconnect" href="https://finans.truncgil.com" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="market-stage">
+        <nav class="topbar" aria-label="Ana navigasyon">
+          <a class="brand" href="#" aria-label="BlitzGold ana sayfa">
+            <span class="brand-mark">B</span>
+            <span>BlitzGold</span>
+          </a>
+          <div class="status-pill" id="dataStatus">
+            <span class="status-dot"></span>
+            <span>Veri bekleniyor</span>
+          </div>
+        </nav>
+
+        <div class="hero-grid">
+          <section class="price-panel" aria-labelledby="gramGoldTitle">
+            <div class="panel-kicker">Canlı takip</div>
+            <h1 id="gramGoldTitle">Gram altın fiyatını ons ve dolar etkisiyle izle.</h1>
+            <p>
+              Canlı gram altın verisini temel alır; ons altın ve USD/TRY hareketinin
+              fiyatı nasıl değiştireceğini anında hesaplar.
+            </p>
+
+            <div class="main-quote">
+              <span>Gram Altın</span>
+              <strong id="gramPrice">--</strong>
+              <small id="gramChange">Günlük değişim bekleniyor</small>
+            </div>
+
+            <div class="quote-grid" aria-label="Piyasa verileri">
+              <article>
+                <span>Ons Altın</span>
+                <strong id="ouncePrice">--</strong>
+                <small id="ounceChange">--</small>
+              </article>
+              <article>
+                <span>Dolar Kuru</span>
+                <strong id="usdPrice">--</strong>
+                <small id="usdChange">--</small>
+              </article>
+              <article>
+                <span>Hesaplanan Gram</span>
+                <strong id="derivedGram">--</strong>
+                <small>Ons x USD/TRY</small>
+              </article>
+            </div>
+          </section>
+
+          <section class="impact-panel" aria-labelledby="impactTitle">
+            <div class="panel-heading">
+              <div>
+                <div class="panel-kicker">Etki simülatörü</div>
+                <h2 id="impactTitle">Fiyatı ne oynatır?</h2>
+              </div>
+              <button class="icon-button" id="refreshButton" type="button" title="Verileri yenile">
+                ↻
+              </button>
+            </div>
+
+            <div class="control-stack">
+              <label class="range-control">
+                <span>
+                  <b>Ons altın hareketi</b>
+                  <output id="ounceMoveLabel">0%</output>
+                </span>
+                <input id="ounceMove" type="range" min="-20" max="20" step="0.5" value="0" autocomplete="off" />
+              </label>
+              <label class="range-control">
+                <span>
+                  <b>Dolar kuru hareketi</b>
+                  <output id="usdMoveLabel">0%</output>
+                </span>
+                <input id="usdMove" type="range" min="-20" max="20" step="0.5" value="0" autocomplete="off" />
+              </label>
+            </div>
+
+            <div class="scenario-result">
+              <span>Senaryo gram fiyatı</span>
+              <strong id="scenarioPrice">--</strong>
+              <small id="scenarioDelta">Canlı fiyat üzerinden hesaplanır</small>
+            </div>
+
+            <div class="quick-grid">
+              <button type="button" data-ounce="1" data-usd="0">Ons +%1</button>
+              <button type="button" data-ounce="0" data-usd="1">Dolar +%1</button>
+              <button type="button" data-ounce="2" data-usd="2">İkisi +%2</button>
+              <button type="button" data-ounce="0" data-usd="0">Sıfırla</button>
+            </div>
+          </section>
+        </div>
+      </section>
+
+      <section class="insight-band" aria-label="Gram altın analiz kartları">
+        <article>
+          <span>Ons +%1 olursa</span>
+          <strong id="ounceOneImpact">--</strong>
+          <small>USD/TRY sabitken yaklaşık etki</small>
+        </article>
+        <article>
+          <span>Dolar +%1 olursa</span>
+          <strong id="usdOneImpact">--</strong>
+          <small>Ons sabitken yaklaşık etki</small>
+        </article>
+        <article>
+          <span>Ons +%1 ve dolar +%1</span>
+          <strong id="combinedOneImpact">--</strong>
+          <small>Bileşik etki hesaba katılır</small>
+        </article>
+        <article>
+          <span>Güncelleme</span>
+          <strong id="updatedAt">--</strong>
+          <small>Kaynak: Trunçgil Finans + Gold API</small>
+        </article>
+      </section>
+
+      <section class="formula-section" aria-labelledby="formulaTitle">
+        <div>
+          <div class="panel-kicker">Hesap mantığı</div>
+          <h2 id="formulaTitle">Gram altın, ons ve doların ortak hareketidir.</h2>
+        </div>
+        <p>
+          Teorik fiyat formülü: <b>Ons altın / 31.1035 x USD/TRY</b>. Canlı gram fiyatı
+          piyasadaki makas ve primleri içerdiği için simülasyon canlı gram verisine göre
+          ölçeklenir.
+        </p>
+      </section>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>
