@@ -34,6 +34,10 @@ const elements = {
   usdMoveLabel: $("#usdMoveLabel"),
   scenarioPrice: $("#scenarioPrice"),
   scenarioDelta: $("#scenarioDelta"),
+  liveOunceValue: $("#liveOunceValue"),
+  scenarioOunceValue: $("#scenarioOunceValue"),
+  liveUsdValue: $("#liveUsdValue"),
+  scenarioUsdValue: $("#scenarioUsdValue"),
   ounceOneImpact: $("#ounceOneImpact"),
   usdOneImpact: $("#usdOneImpact"),
   combinedOneImpact: $("#combinedOneImpact"),
@@ -153,11 +157,17 @@ function updateScenario() {
   const ounceMove = parseMarketNumber(elements.ounceMove.value);
   const usdMove = parseMarketNumber(elements.usdMove.value);
   const scenario = state.gram * (1 + ounceMove / 100) * (1 + usdMove / 100);
+  const scenarioOunce = state.ounce * (1 + ounceMove / 100);
+  const scenarioUsd = state.usd * (1 + usdMove / 100);
   const delta = scenario - state.gram;
   const deltaPercent = (scenario / state.gram - 1) * 100;
 
   elements.ounceMoveLabel.textContent = `${numberTR.format(ounceMove)}%`;
   elements.usdMoveLabel.textContent = `${numberTR.format(usdMove)}%`;
+  elements.liveOunceValue.textContent = moneyUSD.format(state.ounce);
+  elements.scenarioOunceValue.textContent = moneyUSD.format(scenarioOunce);
+  elements.liveUsdValue.textContent = moneyTRY.format(state.usd);
+  elements.scenarioUsdValue.textContent = moneyTRY.format(scenarioUsd);
   elements.scenarioPrice.textContent = moneyTRY.format(scenario);
   elements.scenarioDelta.textContent = `${delta >= 0 ? "+" : ""}${moneyTRY.format(delta)} (${formatChange(deltaPercent)})`;
   elements.scenarioDelta.classList.toggle("positive", delta > 0);
@@ -207,14 +217,6 @@ async function fetchMarket() {
 elements.ounceMove.addEventListener("input", updateScenario);
 elements.usdMove.addEventListener("input", updateScenario);
 elements.refreshButton.addEventListener("click", fetchMarket);
-
-document.querySelectorAll(".quick-grid button").forEach((button) => {
-  button.addEventListener("click", () => {
-    elements.ounceMove.value = button.dataset.ounce;
-    elements.usdMove.value = button.dataset.usd;
-    updateScenario();
-  });
-});
 
 elements.ounceMove.value = 0;
 elements.usdMove.value = 0;

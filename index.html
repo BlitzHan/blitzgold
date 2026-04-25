@@ -33,11 +33,6 @@
               <strong id="gramPrice">--</strong>
               <small id="gramChange">Günlük değişim bekleniyor</small>
             </div>
-            <h1 id="gramGoldTitle">Ons ve dolar hareketinin gram altına etkisini izle.</h1>
-            <p>
-              Canlı gram altın verisini temel alır; ons altın ve USD/TRY hareketinin
-              fiyatı nasıl değiştireceğini anında hesaplar.
-            </p>
 
             <div class="quote-grid" aria-label="Piyasa verileri">
               <article>
@@ -55,6 +50,14 @@
                 <strong id="derivedGram">--</strong>
                 <small>Ons x USD/TRY</small>
               </article>
+            </div>
+
+            <div class="intro-copy">
+              <h1 id="gramGoldTitle">Ons ve dolar hareketinin gram altına etkisini izle.</h1>
+              <p>
+                Canlı gram altın verisini temel alır; ons altın ve USD/TRY hareketinin
+                fiyatı nasıl değiştireceğini anında hesaplar.
+              </p>
             </div>
           </section>
 
@@ -76,6 +79,12 @@
                   <output id="ounceMoveLabel">0%</output>
                 </span>
                 <input id="ounceMove" type="range" min="-20" max="20" step="0.5" value="0" autocomplete="off" />
+                <div class="scenario-market-card">
+                  <span>Canlı ons</span>
+                  <strong id="liveOunceValue">--</strong>
+                  <span>Senaryo ons</span>
+                  <strong id="scenarioOunceValue">--</strong>
+                </div>
               </label>
               <label class="range-control">
                 <span>
@@ -83,6 +92,12 @@
                   <output id="usdMoveLabel">0%</output>
                 </span>
                 <input id="usdMove" type="range" min="-20" max="20" step="0.5" value="0" autocomplete="off" />
+                <div class="scenario-market-card">
+                  <span>Canlı dolar</span>
+                  <strong id="liveUsdValue">--</strong>
+                  <span>Senaryo dolar</span>
+                  <strong id="scenarioUsdValue">--</strong>
+                </div>
               </label>
             </div>
 
@@ -91,32 +106,25 @@
               <strong id="scenarioPrice">--</strong>
               <small id="scenarioDelta">Canlı fiyat üzerinden hesaplanır</small>
             </div>
-
-            <div class="quick-grid">
-              <button type="button" data-ounce="1" data-usd="0">Ons +%1</button>
-              <button type="button" data-ounce="0" data-usd="1">Dolar +%1</button>
-              <button type="button" data-ounce="2" data-usd="2">İkisi +%2</button>
-              <button type="button" data-ounce="0" data-usd="0">Sıfırla</button>
-            </div>
           </section>
         </div>
       </section>
 
       <section class="insight-band" aria-label="Gram altın analiz kartları">
         <article>
-          <span>Ons +%1 olursa</span>
+          <span>Ons etkisi</span>
           <strong id="ounceOneImpact">--</strong>
-          <small>USD/TRY sabitken yaklaşık etki</small>
+          <small>Ons 1 puan arttığında</small>
         </article>
         <article>
-          <span>Dolar +%1 olursa</span>
+          <span>Dolar etkisi</span>
           <strong id="usdOneImpact">--</strong>
-          <small>Ons sabitken yaklaşık etki</small>
+          <small>Dolar 1 puan arttığında</small>
         </article>
         <article>
-          <span>Ons +%1 ve dolar +%1</span>
+          <span>Birlikte etki</span>
           <strong id="combinedOneImpact">--</strong>
-          <small>Bileşik etki hesaba katılır</small>
+          <small>İki piyasa 1 puan arttığında</small>
         </article>
         <article>
           <span>Güncelleme</span>

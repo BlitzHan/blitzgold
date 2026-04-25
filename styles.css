@@ -41,11 +41,11 @@ input {
 .app-shell {
   width: min(1180px, calc(100% - 32px));
   margin: 0 auto;
-  padding: 18px 0 40px;
+  padding: 12px 0 40px;
 }
 
 .market-stage {
-  min-height: calc(100vh - 92px);
+  min-height: calc(100vh - 72px);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -56,7 +56,7 @@ input {
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  padding: 4px 0 18px;
+  padding: 2px 0 12px;
 }
 
 .brand {
@@ -115,10 +115,10 @@ input {
 
 .hero-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1.14fr) minmax(340px, 0.86fr);
-  gap: 20px;
+  grid-template-columns: minmax(0, 1fr) minmax(330px, 0.82fr);
+  gap: 14px;
   align-items: stretch;
-  padding-bottom: 28px;
+  padding-bottom: 16px;
 }
 
 .price-panel,
@@ -131,11 +131,11 @@ input {
 }
 
 .price-panel {
-  padding: clamp(24px, 4vw, 48px);
+  padding: clamp(18px, 3vw, 32px);
 }
 
 .impact-panel {
-  padding: 24px;
+  padding: 18px;
 }
 
 .panel-kicker {
@@ -154,9 +154,9 @@ p {
 
 h1 {
   max-width: 720px;
-  margin-top: 24px;
-  font-size: clamp(2rem, 4.2vw, 4.1rem);
-  line-height: 1.02;
+  margin-top: 14px;
+  font-size: clamp(1.45rem, 3.1vw, 2.75rem);
+  line-height: 1.06;
   letter-spacing: 0;
 }
 
@@ -168,15 +168,15 @@ h2 {
 
 .price-panel > p {
   max-width: 660px;
-  margin-top: 18px;
+  margin-top: 10px;
   color: var(--muted);
-  font-size: 1.05rem;
-  line-height: 1.65;
+  font-size: 0.98rem;
+  line-height: 1.5;
 }
 
 .main-quote {
-  margin-top: 14px;
-  padding: clamp(22px, 3.4vw, 34px);
+  margin-top: 10px;
+  padding: clamp(18px, 3vw, 30px);
   border: 1px solid rgba(244, 197, 66, 0.28);
   border-radius: 8px;
   background: linear-gradient(135deg, rgba(244, 197, 66, 0.14), rgba(29, 37, 42, 0.84));
@@ -204,10 +204,18 @@ h2 {
 .main-quote strong {
   display: block;
   margin-top: 8px;
-  font-size: clamp(3.6rem, 8vw, 7rem);
+  font-size: clamp(3.1rem, 7.2vw, 6.25rem);
   line-height: 1;
   color: var(--gold);
   overflow-wrap: anywhere;
+}
+
+.intro-copy p {
+  max-width: 660px;
+  margin-top: 10px;
+  color: var(--muted);
+  font-size: 0.98rem;
+  line-height: 1.5;
 }
 
 .main-quote small,
@@ -228,13 +236,13 @@ h2 {
 
 .quote-grid {
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  margin-top: 12px;
+  margin-top: 10px;
 }
 
 .quote-grid article,
 .insight-band article {
   min-width: 0;
-  padding: 18px;
+  padding: 14px;
   border: 1px solid var(--line);
   border-radius: 8px;
   background: rgba(21, 27, 31, 0.72);
@@ -266,20 +274,19 @@ h2 {
   font-size: 1.3rem;
 }
 
-.icon-button:hover,
-.quick-grid button:hover {
+.icon-button:hover {
   border-color: rgba(244, 197, 66, 0.6);
 }
 
 .control-stack {
   display: grid;
-  gap: 22px;
-  margin-top: 32px;
+  gap: 16px;
+  margin-top: 20px;
 }
 
 .range-control {
   display: grid;
-  gap: 12px;
+  gap: 10px;
 }
 
 .range-control > span {
@@ -349,9 +356,30 @@ input[type="range"]::-moz-range-thumb {
   cursor: pointer;
 }
 
+.scenario-market-card {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px 12px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(15, 20, 22, 0.74);
+}
+
+.scenario-market-card span {
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+
+.scenario-market-card strong {
+  font-size: 1.05rem;
+  line-height: 1.15;
+  overflow-wrap: anywhere;
+}
+
 .scenario-result {
-  margin-top: 30px;
-  padding: 22px;
+  margin-top: 18px;
+  padding: 18px;
   border-radius: 8px;
   background: #0f1416;
   border: 1px solid rgba(244, 197, 66, 0.28);
@@ -360,24 +388,8 @@ input[type="range"]::-moz-range-thumb {
 .scenario-result strong {
   display: block;
   margin-top: 8px;
-  font-size: clamp(2rem, 5vw, 3.2rem);
+  font-size: clamp(1.8rem, 4.2vw, 2.8rem);
   line-height: 1;
-}
-
-.quick-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 10px;
-  margin-top: 16px;
-}
-
-.quick-grid button {
-  min-height: 44px;
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  color: var(--text);
-  background: var(--surface-2);
-  cursor: pointer;
 }
 
 .insight-band {
@@ -421,13 +433,13 @@ input[type="range"]::-moz-range-thumb {
 
 @media (max-width: 580px) {
   .app-shell {
-    width: min(100% - 20px, 1180px);
-    padding-top: 14px;
+    width: min(100% - 16px, 1180px);
+    padding-top: 10px;
   }
 
   .topbar {
     align-items: flex-start;
-    padding-bottom: 18px;
+    padding-bottom: 10px;
   }
 
   .brand {
@@ -448,16 +460,33 @@ input[type="range"]::-moz-range-thumb {
   .price-panel,
   .impact-panel,
   .formula-section {
-    padding: 18px;
+    padding: 14px;
   }
 
   .quote-grid,
-  .insight-band,
-  .quick-grid {
+  .insight-band {
     grid-template-columns: 1fr;
   }
 
   .main-quote {
-    padding: 18px;
+    padding: 16px;
+  }
+
+  .main-quote strong {
+    font-size: clamp(3.2rem, 15vw, 4.8rem);
+  }
+
+  .quote-grid article {
+    padding: 12px 14px;
+  }
+
+  .intro-copy h1 {
+    margin-top: 14px;
+    font-size: 1.55rem;
+    line-height: 1.08;
+  }
+
+  .intro-copy p {
+    display: none;
   }
 }
