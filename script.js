@@ -220,7 +220,7 @@ function renderPresets() {
 
   renderPresetButtons(
     elements.usdPresets,
-    [usdBase - 6, usdBase - 4, usdBase - 2, usdBase, usdBase + 2, usdBase + 4, usdBase + 6],
+    [usdBase - 2, usdBase - 1, usdBase - 0.5, usdBase, usdBase + 0.5, usdBase + 1, usdBase + 2],
     "usd",
   );
   renderPresetButtons(
